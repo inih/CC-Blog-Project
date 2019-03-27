@@ -1,0 +1,18 @@
+<html>
+    <head>
+
+      {% if title %}
+      <title>CloudComp - Inih</title>
+      {% else %}
+      <title>Welcome to CloudCompBlog</title>
+      {% endif %}
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    </head>
+    <body>
+        <div>Home: <a href="/index/">Home</a></div>
+        <div>View All Posts: <a href="/posts/">Posts</a></div>
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>
+

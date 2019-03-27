@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+   <body>
+     <h1> Weather and Pictures of {{ location }} </h1>
+      <table border = 1 style="float:right;">
+        <img src="{{ pictures }}" >
+        <tr>
+          <th>{{ location }} </th>
+          </tr>
+         {% for key, value in result.items() %}
+            <tr>
+               <th> {{ key }} </th>
+               <td> {{ value }} </td>
+            </tr>
+         {% endfor %}
+      </table>
+   </body>
+{% endblock %}
+
