@@ -162,6 +162,7 @@ Check services for the IP address
 * [Flask](http://flask.pocoo.org/docs/1.0/) - Web framework used
 * [Apixu](https://www.apixu.com/api.aspx) - Used to retrieve weather
 * [Pixabay](https://pixabay.com/api/docs/) - Used to retrieve images
+* [Kubernetes](https://kubernetes.io/docs/home/) - Distribute web service
 
 
 ## Authors
