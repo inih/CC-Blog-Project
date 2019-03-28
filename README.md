@@ -13,6 +13,7 @@ You will need the following before continuing:
 
 * Linux distributed platform
 * Text Editor
+* API keys from **Apixu** and **Pixabay**
 
 The requirements file contains all the modules needed for the app.
 
@@ -23,6 +24,16 @@ requests
 requests-cache
 cassandra-driver
 ```
+
+Register and save them both in a file called 'config.py' formatted as:
+```
+DEBUG = True
+WEATHER_API_KEY = '{API_KEY_HERE}'
+PIXABAY_API_KEY = '{API_KEY_HERE}'
+
+```
+
+Once done, save the file. This file will need to be placed in a directory called 'instance' This directory should be in the directory of the app.
 
 ### Installing
 
@@ -50,7 +61,7 @@ python -m pip install -U -r requirements.txt
 ```
 This command recursively installs/updates the modules in the requirement.txt in the local environment.
 
-**Ensure these two lines are removed:**
+**Ensure these two lines are removed/commented out:**
 ```
 cluster = Cluster(['cassandra'])
 session = cluster.connect()
@@ -101,7 +112,7 @@ To make it easier, we can copy the test CSV into the cassandra pod it save time 
 ```
 docker cp {NAME OF CSV FILE}.csv cassandra-{POD NUMBER}:/{PATH OF CSV FILE}/{NAME OF CSV FILE}.csv
 ```
-Pick any 'cassandra' pod and execute the following command to add a new table and data
+Pick any 'cassandra' pod created from earlier and execute the following command to add a new table and data
 ```
 kubectl exec- it cassandra-{POD NUMBER} cqlsh
 ```
@@ -121,7 +132,7 @@ session = cluster.connect()
 ```
 Ensure that this is not commented out.
 
-Build the image and push it to the Google Repository
+Build the image using the 'Dockerfile' and push it to the Google Repository
 ```
 docker build -t gcr.io/${PROJECT_ID}/travelapp:v1 .
 
@@ -138,7 +149,7 @@ kubectl expose deployment web --target-port=8080 --type=NodePort
 kubectl apply -f basic-ingress.yaml
 
 ```
-*If the service name is changed, make sure that change is reflected in the basic-ingress.yaml file*
+*If the service/deployment name is changed, make sure that change is reflected in the basic-ingress.yaml file*
 
 Wait for the external IP address by getting services
 The directory will need to be uploaded within the 'home' directory
