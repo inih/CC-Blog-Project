@@ -167,6 +167,44 @@ kubectl expose deployment travel-app --type=LoadBalancer --port 80
 ```
 Check services for the IP address
 
+## Test
+
+Below are the routes the pages can go through.
+* URL/posts - View all "blog posts"
+```
+{IP_ADDRESS}/posts
+```
+* URL/posts/<post_title> -  View specific "blog post" based on title
+```
+{IP_ADDRESS}/posts/<post_title>
+```
+
+Users also have the ability to delete or Post new entries
+For example, to delete, run this in the terminal
+
+```
+curl -X DELETE {IP_ADDRESS}/posts/<post_title>
+```
+It should return with a message as to whether it was successful or not.
+
+If you change the DELETE to a GET, it will retrieve the location and passage for the post rather than remove it.
+
+To add a new entry
+```
+curl -i -H "Content-Type: application/json" -X POST -d
+'{"BlogEntries":[],"Location":"{LOCATION_HERE}", "Title":"{TITLE_HERE}", "Passage": ""{TEXT_HERE}"}' {IP_ADDRESS_HERE}/newpost/
+```
+or
+```
+curl -i -H "Content-Type: application/json" -X POST -d
+'{"BlogEntries":[],"location":"{LOCATION_HERE}", "title":"{TITLE_HERE}", "passage": ""{TEXT_HERE}"}' {IP_ADDRESS_HERE}/newpost
+```
+
+This is can be viewed through
+```
+{IP_ADDRESS}/posts
+```
+
 ## Built With
 
 * [Cassandra](http://cassandra.apache.org/doc/latest/) - Database used
