@@ -123,6 +123,7 @@ def postDeleteOrGet(post_title):
 
 #This function is specifically for the database and won't work if the first 2 cassandra lines above are commented route
 #This function searches for a post in the database if it matches the name the user enters.
+#BAd for SQL injection
 @app.route('/posts/db/<post_title>', methods=['GET'])
 def showPost(post_title):
 	response = '<h1>That entry does not exist!</h1>'

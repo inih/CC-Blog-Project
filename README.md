@@ -76,26 +76,82 @@ Clicking on the link should take you to the website.
 
 ## Deployment
 
+This project will assume you're deploying this within Google Cloud and using Kubernetes
 You will need the following before continuing:
 
 * Docker
 * Kubernetes
+* CSV file with the following as the **header** (Test data should be included)
+  * Passage, Location, Title
 
-This section will detail how to get this app ready for a cloud environment. For example, Google Cloud
-Once the directory is uploaded, run the docker build command in the directory of the app:
+This section will detail how to get this app ready for a cloud environment. This uses Google Cloud as the platform.
+
+Within the 'Cassandra Services' folder are 4 files. The following will need to be executed (We'll come back to the last).
+```
+kubectl create -f cassandra-peer-service.yml
+kubectl create -f cassandra-service.yml
+kubectl create -f cassandra-replication-controller.yml
+```
+Check the container is running correctly
+```
+kubectl get pods -l name=cassandra
+```
+
+To make it easier, we can copy the test CSV into the cassandra pod it save time from typing it out.
+```
+docker cp {NAME OF CSV FILE}.csv cassandra-{POD NUMBER}:/{PATH OF CSV FILE}/{NAME OF CSV FILE}.csv
+```
+Pick any 'cassandra' pod and execute the following command to add a new table and data
+```
+kubectl exec- it cassandra-{POD NUMBER} cqlsh
+```
+Execute the following command to create the DB
+```
+CREATE KEYSPACE travelrecords WITH REPLICATION = {'class':'SimpleStrategy', 'replication_factor': 1};
+
+CREATE TABLE travelrecords.posts (passage text, location text, title text PRIMARY KEY);
+
+COPY travelrecords.posts(Passage, Location, Title) FROM '/test.csv' WITH DELIMITER=',' AND HEADER=TRUE;
+```
+
+In the previous section, these two lines were commented out:
+```
+cluster = Cluster(['cassandra'])
+session = cluster.connect()
+```
+Ensure that this is not commented out.
+
+Build the image and push it to the Google Repository
+```
+docker build -t gcr.io/${PROJECT_ID}/travelapp:v1 .
+
+docker push gcr.io/${PROJECT_ID}/travelapp:v1
 
 ```
-docker build -t gcr.io/${PROJECT_ID}/name_of_app:v1 .
+
+Run the following commands
 ```
+kubectl run web --image=gcr.io/{PROJECT_ID}/travelapp:1.0 --port=8080
+
+kubectl expose deployment web --target-port=8080 --type=NodePort
+
+kubectl apply -f basic-ingress.yaml
+
+```
+*If the service name is changed, make sure that change is reflected in the basic-ingress.yaml file*
+
+Wait for the external IP address by getting services
+The directory will need to be uploaded within the 'home' directory
+
+Run the following docker build command in the directory of the app:
+
 Once built, It will need to be pushed:
+
+After being pushed, the service needs to run and exposed:
 ```
-docker push gcr.io/${PROJECT_ID}/name_of_app:v1
-```
-After being pushed, the service needs to be run and exposed:
-```
-kubectl run pokemon-app --image=gcr.io/${PROJECT_ID}/pokemon-app:v1
+kubectl run travel-app --image=gcr.io/${PROJECT_ID}/travelapp:v1
 --port 8080
-kubectl expose deployment pokemon-app --type=LoadBalancer --port 80
+kubectl expose deployment travel-app --type=LoadBalancer --port 80
 --target-port 8080
 ```
 Check services for the IP address
