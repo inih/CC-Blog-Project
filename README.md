@@ -30,7 +30,6 @@ Register and save them both in a file called 'config.py' formatted as:
 DEBUG = True
 WEATHER_API_KEY = '{API_KEY_HERE}'
 PIXABAY_API_KEY = '{API_KEY_HERE}'
-
 ```
 
 Once done, save the file. This file will need to be placed in a directory called 'instance' This directory should be in the directory of the app.
@@ -147,7 +146,6 @@ kubectl run web --image=gcr.io/{PROJECT_ID}/travelapp:1.0 --port=8080
 kubectl expose deployment web --target-port=8080 --type=NodePort
 
 kubectl apply -f basic-ingress.yaml
-
 ```
 *If the service/deployment name is changed, make sure that change is reflected in the basic-ingress.yaml file*
 
